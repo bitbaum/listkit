@@ -1,0 +1,61 @@
+{
+  "name": "listkit",
+  "version": "0.1.0",
+  "description": "A list as a query: a closed set of facet kinds, a URL codec that copies rather than rebuilds, a comparator that puts missing values last, and page arithmetic that cannot produce a negative offset. No markup, no React, no HTTP client.",
+  "license": "MIT",
+  "author": "Mao Nakamoto",
+  "homepage": "https://github.com/bitbaum/listkit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitbaum/listkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bitbaum/listkit/issues"
+  },
+  "keywords": [
+    "filter",
+    "sort",
+    "facets",
+    "pagination",
+    "search-params",
+    "headless"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test test/*.test.js",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run build && pnpm test",
+    "prepare": "pnpm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.4.1",
+    "eslint": "^10.9.1",
+    "globals": "^17.12.0",
+    "prettier": "3.9.6",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.69.0"
+  }
+}
