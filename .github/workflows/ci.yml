@@ -1,0 +1,58 @@
+# GOLDEN CI FLOOR — pnpm repos. See bitbaum/fleet templates/ci/README.md.
+#
+# listkit shipped its whole first commit with a complete `verify` and NO
+# workflow directory at all — the floor audit reported it as "CI never runs
+# verify", which understated it: there was nothing to run anything. A shared
+# package with adopters is the worst place in the fleet for that hole, because
+# a break here reaches every consumer at their next install.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push makes the older run obsolete — don't waste minutes finishing it.
+# On main the group is keyed per COMMIT: a commit cancelling a DIFFERENT
+# commit's run breaks everything downstream that keys off that run.
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.ref == 'refs/heads/main' && github.sha || 'branch' }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v4
+        with:
+          # Match package.json `packageManager` (pnpm@11.25.0).
+          version: 11
+
+      - uses: actions/setup-node@v7
+        with:
+          # pnpm 11 requires Node >= 22.13 (it imports node:sqlite). Keep the
+          # pnpm major above and this Node major in lockstep.
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # No .next/cache step: this is a library, not a Next app.
+      #
+      # And no separate Build step. The template carries one because `verify`
+      # is usually lint+typecheck+test, so the shipped artifact is never
+      # otherwise compiled. Here `verify` ALREADY ends in `build`, so adding
+      # one would compile the package twice per run for no extra coverage —
+      # the same defect as a deploy re-running CI's bundle, which the hygiene
+      # audit exists to keep at zero.
+      #
+      # SSOT: "verified" is defined ONCE, in package.json `verify`, and run
+      # identically here and locally. Change the checks in one place, not two.
+      - name: Verify
+        run: pnpm run verify
