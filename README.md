@@ -116,3 +116,9 @@ Tests import the package **by name**, so a broken `exports` or `files` map fails
 here rather than at the first consumer's install.
 
 MIT.
+
+---
+
+Part of **[bitbaum](https://bitbaum.orangecat.ch)** — AI-native products on open
+infrastructure, built in Zürich. Every package here lists the apps that use it:
+**[which apps use listkit](https://bitbaum.orangecat.ch/packages/#listkit)**.
