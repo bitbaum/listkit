@@ -48,8 +48,18 @@ export type Facet<T> = {
 
 /** Free-text search: which parts of a record the query is matched against. */
 export type SearchSpec<T> = {
-  /** Every string worth matching. Empty strings and nulls are ignored. */
+  /**
+   * Every string worth matching, MOST IMPORTANT FIRST — the order is the
+   * ranking: a word found in the first field outranks the same word in the
+   * third. Empty strings and nulls are ignored.
+   */
   text: (row: T) => (string | null | undefined)[];
+  /**
+   * Rank results by relevance while a search is active and the reader has not
+   * picked a sort of their own (the sort is the spec's default). On unless set
+   * to false — a list whose order IS the content, a timeline say, opts out.
+   */
+  rank?: boolean;
 };
 
 export type Sortable<T> = {
@@ -68,11 +78,6 @@ export type ListSpec<T> = {
   defaultDir?: "asc" | "desc";
   defaultPageSize?: number;
 };
-
-/** Casefold and collapse whitespace, so " Foo  Bar " and "foo bar" match. */
-export function normalise(v: string): string {
-  return v.trim().toLowerCase().replace(/\s+/g, " ");
-}
 
 function asList(v: ReturnType<Facet<unknown>["value"]>): string[] {
   if (v === null || v === undefined) return [];
@@ -126,11 +131,4 @@ export function facetMatches<T>(facet: Facet<T>, row: T, selected: readonly stri
       return at >= 0 && at >= floor;
     }
   }
-}
-
-/** Does a record contain the search text anywhere the spec points at? */
-export function searchMatches<T>(spec: SearchSpec<T> | undefined, row: T, q: string): boolean {
-  const needle = normalise(q);
-  if (!needle || !spec) return true;
-  return spec.text(row).some((v) => (v ? normalise(v).includes(needle) : false));
 }

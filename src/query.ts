@@ -37,6 +37,12 @@ export const SIZE_KEY = "size";
 export const SORT_KEY = "sort";
 export const DIR_KEY = "dir";
 export const TEXT_KEY = "q";
+/**
+ * The sort key that means "best match first". Accepted on any spec with a
+ * search; it needs no entry in `sorts` and falls back to the default sort when
+ * there is no text to rank by.
+ */
+export const RELEVANCE_SORT = "relevance";
 
 /** Params as given by a router: a real URLSearchParams or Next's plain record. */
 export type ParamsLike = URLSearchParams | Record<string, string | string[] | undefined>;
@@ -84,7 +90,10 @@ export function parseQuery<T>(
 
   const sortRaw = readAll(params, SORT_KEY)[0];
   const sort =
-    sortRaw !== undefined && spec.sorts.some((s) => s.key === sortRaw) ? sortRaw : spec.defaultSort;
+    sortRaw !== undefined &&
+    (spec.sorts.some((s) => s.key === sortRaw) || (sortRaw === RELEVANCE_SORT && !!spec.search))
+      ? sortRaw
+      : spec.defaultSort;
   const dirRaw = readAll(params, DIR_KEY)[0];
   const dir: "asc" | "desc" =
     dirRaw === "asc" || dirRaw === "desc" ? dirRaw : (spec.defaultDir ?? "asc");

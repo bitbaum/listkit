@@ -23,8 +23,6 @@
  */
 export {
   facetMatches,
-  searchMatches,
-  normalise,
   type Facet,
   type FacetKind,
   type FacetLogic,
@@ -44,12 +42,15 @@ export {
   SORT_KEY,
   DIR_KEY,
   TEXT_KEY,
+  RELEVANCE_SORT,
   type ListQuery,
   type ParamsLike,
   type ParseOptions,
 } from "./query.js";
 
-export { applyQuery, matches, facetCounts, type ListResult } from "./apply.js";
+export { searchMatches, searchScore, searchTerms, normalise } from "./search.js";
+
+export { applyQuery, matches, facetCounts, isRanked, type ListResult } from "./apply.js";
 export { compareBy, nextDirection, type SortKey, type Direction } from "./sort.js";
 export { pageOf, pageWindow, type PageInfo } from "./page.js";
 export { toggleInSet, toggleFlag, escapeLike, likeContains, debounce, latest } from "./values.js";
