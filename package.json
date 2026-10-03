@@ -1,6 +1,6 @@
 {
   "name": "listkit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A list as a query: a closed set of facet kinds, a URL codec that copies rather than rebuilds, a comparator that puts missing values last, and page arithmetic that cannot produce a negative offset. No markup, no React, no HTTP client.",
   "license": "MIT",
   "author": "Mao Nakamoto",

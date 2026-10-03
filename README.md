@@ -79,6 +79,24 @@ reader's language.
 - **`page` is dropped when the result set changes**, kept when only the page moves.
 - **A superseded async search resolves to `undefined`**, so a slow "ab" cannot
   overwrite a fast "abc".
+- **Every search word must match, folded**, and a non-match scores 0.
+- **A reader's chosen sort is never overridden by relevance.**
+
+### Search that finds what people type
+
+- **Every word, any order.** `bike sell` finds "Sell my old bike".
+- **Accents and ß fold.** `zurich` finds "Zürich", `strasse` finds "Straße".
+- **Best match first.** While a search is active and the reader has not picked
+  a sort, results rank by where a word matched — `search.text` lists fields
+  most important first — and how well: the whole field, its start, a word's
+  start, anywhere inside. A phrase match earns a bonus; ties keep the default
+  order. A sort the reader chose wins. `?sort=relevance` asks for it
+  explicitly; `search: { rank: false }` opts a list out.
+- **One rule for SQL too.** `searchTerms(q)` gives the folded words; apply one
+  `likeContains` per term, ANDed, and the database agrees with the array.
+  (Fold the column the same way — `unaccent()` in Postgres.)
+
+No stemming, no typo tolerance, no index: that is a search engine's job.
 
 ## What it deliberately does not ship
 
@@ -102,7 +120,7 @@ Forcing one execution model would serve one repo and strand the rest.
 ## Install
 
 ```bash
-pnpm add github:bitbaum/listkit#v0.1.0
+pnpm add github:bitbaum/listkit#v0.2.0
 ```
 
 ## Develop
