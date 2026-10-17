@@ -1,4 +1,4 @@
-# listkit
+# @bitbaum/listkit
 
 A list as a query. Filtering, sorting, searching and paging are the same problem
 everywhere, and they were solved separately everywhere.
@@ -36,7 +36,7 @@ be written again:
 The **decisions**, and nothing else.
 
 ```ts
-import { parseQuery, writeQuery, applyQuery, type ListSpec } from "listkit";
+import { parseQuery, writeQuery, applyQuery, type ListSpec } from "@bitbaum/listkit";
 
 const spec: ListSpec<Project> = {
   facets: [

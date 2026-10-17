@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { applyQuery, matches, facetCounts, emptyQuery, facetMatches } from "listkit";
+import { applyQuery, matches, facetCounts, emptyQuery, facetMatches } from "@bitbaum/listkit";
 
 const rows = [
   {
@@ -42,7 +42,7 @@ const rows = [
   },
 ];
 
-/** @type {import("listkit").ListSpec<(typeof rows)[number]>} */
+/** @type {import("@bitbaum/listkit").ListSpec<(typeof rows)[number]>} */
 const spec = {
   facets: [
     { key: "kind", kind: "one", value: (r) => r.kind, options: ["product", "client", "demo"] },

@@ -11,7 +11,7 @@ import {
   likeContains,
   debounce,
   latest,
-} from "listkit";
+} from "@bitbaum/listkit";
 
 // ─────────────────────────────────────────────────────────────── comparator
 test("missing values sort last in BOTH directions", () => {
