@@ -2,9 +2,9 @@
 // stays green here and fails at the first consumer's install.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseQuery, writeQuery, emptyQuery, isNarrowed, sameResultSet } from "listkit";
+import { parseQuery, writeQuery, emptyQuery, isNarrowed, sameResultSet } from "@bitbaum/listkit";
 
-/** @type {import("listkit").ListSpec<{kind:string,status:string,site:unknown,name:string}>} */
+/** @type {import("@bitbaum/listkit").ListSpec<{kind:string,status:string,site:unknown,name:string}>} */
 const spec = {
   facets: [
     { key: "kind", kind: "one", value: (r) => r.kind, options: ["product", "demo", "client"] },

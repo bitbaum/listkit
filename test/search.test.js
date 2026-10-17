@@ -11,7 +11,7 @@ import {
   searchTerms,
   writeQuery,
   RELEVANCE_SORT,
-} from "listkit";
+} from "@bitbaum/listkit";
 
 const listings = [
   { title: "Bike, old frame", body: "A steel frame, needs wheels", city: "Bern", since: 3 },
