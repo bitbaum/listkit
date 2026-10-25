@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         # No `version:` input: package.json `packageManager` (pnpm@11.25.0) is
         # the single source for it and action-setup@v4 reads it. Setting both
         # is a hard error before any step runs — "Multiple versions of pnpm
