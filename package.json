@@ -1,6 +1,6 @@
 {
   "name": "@bitbaum/listkit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A list as a query: a closed set of facet kinds, a URL codec that copies rather than rebuilds, a comparator that puts missing values last, and page arithmetic that cannot produce a negative offset. No markup, no React, no HTTP client.",
   "license": "MIT",
   "author": "Cato",
@@ -45,7 +45,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test test/*.test.js",
     "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run build && pnpm test",
-    "prepare": "pnpm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

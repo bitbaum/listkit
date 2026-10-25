@@ -140,3 +140,5 @@ MIT.
 Part of **[bitbaum](https://bitbaum.orangecat.ch)** — AI-native products on open
 infrastructure, built in Zürich. Every package here lists the apps that use it:
 **[which apps use listkit](https://bitbaum.orangecat.ch/packages/#listkit)**.
+
+Git releases include the compiled `dist/` artifact and require no consumer-side prepare build. Package CI rebuilds it and refuses a mismatch with committed output, so consumers can retain pnpm's default build-script restrictions. The same public exports work for Git and npm installs.
