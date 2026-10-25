@@ -28,9 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         # No `version:` input: package.json `packageManager` (pnpm@11.25.0) is
-        # the single source for it and action-setup@v4 reads it. Setting both
+        # the single source for it and action-setup reads it. Setting both
         # is a hard error before any step runs — "Multiple versions of pnpm
         # specified" — which is exactly how this file failed on its first run,
         # in 5 seconds, having copied the fleet template verbatim. The template
@@ -40,7 +40,7 @@ jobs:
         with:
           # pnpm 11 requires Node >= 22.13 (it imports node:sqlite). Keep the
           # pnpm major above and this Node major in lockstep.
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install
@@ -59,3 +59,12 @@ jobs:
       # identically here and locally. Change the checks in one place, not two.
       - name: Verify
         run: pnpm run verify
+
+      - name: Git release artifact matches the verified source
+        run: |
+          set -euo pipefail
+          if [ -n "$(git status --porcelain --untracked-files=all -- dist)" ]; then
+            git status --short -- dist
+            echo "Committed dist must match the verified build, including new files." >&2
+            exit 1
+          fi

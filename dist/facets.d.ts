@@ -1,0 +1,82 @@
+/**
+ * What you can narrow a list by.
+ *
+ * A survey of twelve repositories on 2026-09-11 found twelve incompatible
+ * filter-state shapes and no two alike. The thing they actually disagree about
+ * is not the data — it is what KIND of narrowing each field supports, and each
+ * repo rediscovered the kinds one at a time. This is the closed set, taken from
+ * what those repos already do:
+ *
+ *   one      pick a single value            "kind = product"
+ *   many     pick several                   "status in (live, validating)"
+ *   flag     a boolean switch               "has no site"
+ *   range    numeric between                "price 10..50"
+ *   ordinal  a threshold on a scale         "tier B or better"
+ *
+ * The sentinel for "no filter" is the EMPTY SELECTION, never a magic string.
+ * One repo used the translated label ("Alle") as its all-value, which makes
+ * filter identity depend on the reader's language — a German user and an
+ * English user filtering the same list got different results.
+ */
+/** The kinds of narrowing a field can support. */
+export type FacetKind = "one" | "many" | "flag" | "range" | "ordinal";
+/** How several selected values combine. `any` is union, `all` is intersection. */
+export type FacetLogic = "any" | "all";
+export type Facet<T> = {
+    /** URL parameter name. Short, stable, lowercase. */
+    key: string;
+    kind: FacetKind;
+    /**
+     * The comparable value(s) on a record. Returning an array makes a record
+     * match on any of them, which is what tags and themes need.
+     */
+    value: (row: T) => string | string[] | number | boolean | null | undefined;
+    /**
+     * Permitted values, when the set is known. Anything else arriving in the URL
+     * is dropped rather than passed through: a filter nobody can produce from the
+     * UI is either a typo or someone probing, and neither deserves a query.
+     */
+    options?: readonly string[];
+    /** `many` only — defaults to `any`. */
+    logic?: FacetLogic;
+    /** `ordinal` only — the scale, lowest first. Selection means "this or better". */
+    scale?: readonly string[];
+};
+/** Free-text search: which parts of a record the query is matched against. */
+export type SearchSpec<T> = {
+    /**
+     * Every string worth matching, MOST IMPORTANT FIRST — the order is the
+     * ranking: a word found in the first field outranks the same word in the
+     * third. Empty strings and nulls are ignored.
+     */
+    text: (row: T) => (string | null | undefined)[];
+    /**
+     * Rank results by relevance while a search is active and the reader has not
+     * picked a sort of their own (the sort is the spec's default). On unless set
+     * to false — a list whose order IS the content, a timeline say, opts out.
+     */
+    rank?: boolean;
+};
+export type Sortable<T> = {
+    key: string;
+    /** Sort keys, applied in order until one separates the two records. */
+    by: ((row: T) => string | number | boolean | null | undefined)[];
+    label?: string;
+};
+export type ListSpec<T> = {
+    facets: readonly Facet<T>[];
+    search?: SearchSpec<T>;
+    sorts: readonly Sortable<T>[];
+    /** Sort key used when the URL names none. Must exist in `sorts`. */
+    defaultSort: string;
+    defaultDir?: "asc" | "desc";
+    defaultPageSize?: number;
+};
+/**
+ * Does one record pass one facet's selection?
+ *
+ * An empty selection always passes. That is the whole reason this returns true
+ * early: "no filter chosen" and "filter chosen that nothing matches" are
+ * different states, and conflating them is how a list silently empties itself.
+ */
+export declare function facetMatches<T>(facet: Facet<T>, row: T, selected: readonly string[]): boolean;
