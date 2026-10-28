@@ -1,6 +1,6 @@
 {
   "name": "@bitbaum/listkit",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A list as a query: a closed set of facet kinds, a URL codec that copies rather than rebuilds, a comparator that puts missing values last, and page arithmetic that cannot produce a negative offset. No markup, no React, no HTTP client.",
   "license": "MIT",
   "author": "Cato",
