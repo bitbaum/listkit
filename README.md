@@ -120,7 +120,7 @@ Forcing one execution model would serve one repo and strand the rest.
 ## Install
 
 ```bash
-pnpm add github:bitbaum/listkit#v0.2.0
+pnpm add @bitbaum/listkit
 ```
 
 ## Develop
